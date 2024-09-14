@@ -46,4 +46,4 @@ jobs:
       #  run: go build -v ./...
 
       - name: Test
-        run: go make test
+        run: make test
