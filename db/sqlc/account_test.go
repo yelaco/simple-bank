@@ -86,7 +86,6 @@ func TestListAccounts(t *testing.T) {
 	}
 
 	arg := ListAccountsParams{
-		Owner:  owner,
 		Limit:  5,
 		Offset: 5,
 	}
