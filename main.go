@@ -19,7 +19,7 @@ const (
 func main() {
 	conn, err := sql.Open(dbDriver, dbSource)
 	if err != nil {
-		log.Fatalf("cannot connect to db: %w", err)
+		log.Fatal("cannot connect to db: ", err)
 	}
 
 	store := db.NewStore(conn)
@@ -27,6 +27,6 @@ func main() {
 
 	err = server.Start(serverAddress)
 	if err != nil {
-		log.Fatalf("cannot start server: %w", err)
+		log.Fatal("cannot start server: ", err)
 	}
 }
