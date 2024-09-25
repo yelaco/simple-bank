@@ -5,10 +5,11 @@ go 1.23
 require (
 	github.com/gin-gonic/gin v1.10.0
 	github.com/go-playground/validator/v10 v10.22.1
-	github.com/golang/mock v1.6.0
 	github.com/lib/pq v1.10.9
 	github.com/spf13/viper v1.19.0
 	github.com/stretchr/testify v1.9.0
+	go.uber.org/mock v0.4.0
+	golang.org/x/crypto v0.27.0
 )
 
 require (
@@ -44,10 +45,8 @@ require (
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.12 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
-	go.uber.org/mock v0.4.0 // indirect
 	go.uber.org/multierr v1.9.0 // indirect
 	golang.org/x/arch v0.10.0 // indirect
-	golang.org/x/crypto v0.27.0 // indirect
 	golang.org/x/exp v0.0.0-20230905200255-921286631fa9 // indirect
 	golang.org/x/net v0.29.0 // indirect
 	golang.org/x/sys v0.25.0 // indirect
