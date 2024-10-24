@@ -39,24 +39,18 @@ func (server *Server) setupRouter() {
 
 	_ = server.bindValidators()
 
-	authMiddleware := authMiddleware(server.tokenMaker)
+	router.POST("/users", server.createUser)
+	router.POST("/users/login", server.loginUser)
 
-	userRoutes := router.Group("/users")
+	authRoutes := router.Group("/").Use(authMiddleware(server.tokenMaker))
 	{
-		userRoutes.POST("/", server.createUser)
-		userRoutes.POST("/login", server.loginUser)
-	}
+		// account routes
+		authRoutes.POST("/accounts", server.createAccount)
+		authRoutes.GET("/accounts", server.listAccounts)
+		authRoutes.GET("/accounts/:id", server.getAccount)
 
-	accountRoutes := router.Group("/accounts", authMiddleware)
-	{
-		accountRoutes.POST("/", server.createAccount)
-		accountRoutes.GET("/", server.listAccounts)
-		accountRoutes.GET("/:id", server.getAccount)
-	}
-
-	transferRoutes := router.Group("/transfers", authMiddleware)
-	{
-		transferRoutes.POST("/", server.createTransfer)
+		// transfer routes
+		authRoutes.POST("/transfers", server.createTransfer)
 	}
 
 	server.router = router
