@@ -39,22 +39,24 @@ func (server *Server) setupRouter() {
 
 	_ = server.bindValidators()
 
-	accountRoutes := router.Group("/accounts")
+	authMiddleware := authMiddleware(server.tokenMaker)
+
+	userRoutes := router.Group("/users")
+	{
+		userRoutes.POST("/", server.createUser)
+		userRoutes.POST("/login", server.loginUser)
+	}
+
+	accountRoutes := router.Group("/accounts", authMiddleware)
 	{
 		accountRoutes.POST("/", server.createAccount)
 		accountRoutes.GET("/", server.listAccounts)
 		accountRoutes.GET("/:id", server.getAccount)
 	}
 
-	transferRoutes := router.Group("/transfers")
+	transferRoutes := router.Group("/transfers", authMiddleware)
 	{
 		transferRoutes.POST("/", server.createTransfer)
-	}
-
-	userRoutes := router.Group("/users")
-	{
-		userRoutes.POST("/", server.createUser)
-		userRoutes.POST("/login", server.loginUser)
 	}
 
 	server.router = router
