@@ -2,7 +2,7 @@
 FROM golang:1.23-alpine3.20 AS builder
 
 # Set SHELL option -o pipefail
-SHELL ["/bin/ash", "-eo", "pipefail", "-c"]
+SHELL ["/bin/bash", "-eo", "pipefail", "-c"]
 
 WORKDIR /app
 COPY . .
