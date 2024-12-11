@@ -20,6 +20,7 @@ type Server struct {
 // NewServer creates a new HTTP server and setup routing.
 func NewServer(config util.Config, store db.Store) (*Server, error) {
 	tokenMaker, err := token.NewPasetoMaker(config.TokenSymmetricKey)
+	// tokenMaker, err := token.NewJwtMaker(config.TokenSymmetricKey)
 	if err != nil {
 		return nil, fmt.Errorf("api.NewServer: cannot create token maker: %w", err)
 	}
@@ -41,6 +42,7 @@ func (server *Server) setupRouter() {
 
 	router.POST("/users", server.createUser)
 	router.POST("/users/login", server.loginUser)
+	router.POST("/tokens/renew_access", server.renewAccessToken)
 
 	authRoutes := router.Group("/").Use(authMiddleware(server.tokenMaker))
 	{
