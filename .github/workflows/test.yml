@@ -33,6 +33,12 @@ jobs:
         with:
           go-version: "1.23"
 
+      - name: Install Task
+        uses: arduino/setup-task@v2
+        with:
+          version: 3.x
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Install Golang migrate
         run: |
           curl -L https://github.com/golang-migrate/migrate/releases/download/v4.18.1/migrate.linux-amd64.tar.gz | tar xvz
@@ -40,10 +46,10 @@ jobs:
           which migrate
 
       - name: Run migration
-        run: make migrateup
+        run: task migrateup
 
       #- name: Build
       #  run: go build -v ./...
 
       - name: Test
-        run: make test
+        run: task test
