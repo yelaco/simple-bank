@@ -1,0 +1,61 @@
+version: "3"
+
+vars:
+  DB_URL: "postgresql://root:secret@localhost:5432/simple_bank?sslmode=disable"
+
+tasks:
+  network:
+    cmds:
+      - docker network inspect bank-network || docker network create bank-network
+
+  postgres:
+    cmds:
+      - docker run --name postgres12 --network bank-network -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=secret -d postgres:12-alpine
+
+  createdb:
+    cmds:
+      - docker exec -it postgres12 createdb --username=root --owner=root simple_bank
+
+  dropdb:
+    cmds:
+      - docker exec -it postgres12 dropdb simple_bank
+
+  migrateup:
+    cmds:
+      - migrate -path db/migration/ -database "{{.DB_URL}}" --verbose up
+
+  migrateup1:
+    cmds:
+      - migrate -path db/migration/ -database "{{.DB_URL}}" --verbose up 1
+
+  migratedown:
+    cmds:
+      - migrate -path db/migration/ -database "{{.DB_URL}}" --verbose down
+
+  migratedown1:
+    cmds:
+      - migrate -path db/migration/ -database "{{.DB_URL}}" --verbose down 1
+
+  db_docs:
+    cmds:
+      - dbdocs build doc/db.dbml --project simple-bank
+
+  db_schema:
+    cmds:
+      - dbml2sql --postgres -o doc/schema.sql doc/db.dbml
+
+  sqlc:
+    cmds:
+      - sqlc generate
+
+  test:
+    cmds:
+      - go test -v -cover ./...
+
+  server:
+    cmds:
+      - go run main.go
+
+  mock:
+    cmds:
+      - mockgen -package mockdb -destination db/mock/store.go github.com/yelaco/simple-bank/db/sqlc Store
