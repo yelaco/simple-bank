@@ -7,10 +7,11 @@
 package pb
 
 import (
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
+
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -168,12 +169,14 @@ func file_rpc_create_user_proto_rawDescGZIP() []byte {
 	return file_rpc_create_user_proto_rawDescData
 }
 
-var file_rpc_create_user_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
-var file_rpc_create_user_proto_goTypes = []any{
-	(*CreateUserRequest)(nil),  // 0: pb.v1.CreateUserRequest
-	(*CreateUserResponse)(nil), // 1: pb.v1.CreateUserResponse
-	(*User)(nil),               // 2: pb.v1.User
-}
+var (
+	file_rpc_create_user_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+	file_rpc_create_user_proto_goTypes  = []any{
+		(*CreateUserRequest)(nil),  // 0: pb.v1.CreateUserRequest
+		(*CreateUserResponse)(nil), // 1: pb.v1.CreateUserResponse
+		(*User)(nil),               // 2: pb.v1.User
+	}
+)
 var file_rpc_create_user_proto_depIdxs = []int32{
 	2, // 0: pb.v1.CreateUserResponse.user:type_name -> pb.v1.User
 	1, // [1:1] is the sub-list for method output_type
