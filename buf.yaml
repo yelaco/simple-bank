@@ -1,0 +1,9 @@
+version: v2
+build:
+  roots:
+    - .
+modules:
+  - path: proto/pb/v1
+lint:
+  use:
+    - DEFAULT
