@@ -8,7 +8,7 @@ WORKDIR /app
 COPY . .
 
 # Consolidate RUN instructions and use --no-cache
-RUN apk add --no-cache curl=8.11.1-r0 && \
+RUN apk add --no-cache curl=8.12.1-r0 && \
   curl -L https://github.com/golang-migrate/migrate/releases/download/v4.18.1/migrate.linux-amd64.tar.gz | tar xvz && \
   go build -o main main.go
 

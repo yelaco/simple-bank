@@ -2,13 +2,13 @@ syntax = "proto3";
 
 package pb.v1;
 
-import "user.proto";
+import "pb/v1/user.proto";
 
 option go_package = "github.com/yelaco/simple-bank/pb";
 
 message CreateUserRequest {
   string username = 1;
-  string full_name = 2;
+  string fullName = 2;
   string email = 3;
   string password = 4;
 }

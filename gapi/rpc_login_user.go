@@ -5,7 +5,7 @@ import (
 	"database/sql"
 
 	db "github.com/yelaco/simple-bank/db/sqlc"
-	"github.com/yelaco/simple-bank/pb"
+	"github.com/yelaco/simple-bank/gen/pb/v1"
 	"github.com/yelaco/simple-bank/util"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
