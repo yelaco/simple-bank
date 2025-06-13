@@ -16,14 +16,14 @@ func (server *Server) LoginUser(ctx context.Context, req *pb.LoginUserRequest) (
 	user, err := server.store.GetUser(ctx, req.GetUsername())
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return nil, status.Errorf(codes.NotFound, "user not found", err)
+			return nil, status.Errorf(codes.NotFound, "user not found")
 		}
 		return nil, status.Errorf(codes.Internal, "failed to find user: %s", err)
 	}
 
 	err = util.CheckPassword(req.Password, user.HashedPassword)
 	if err != nil {
-		return nil, status.Errorf(codes.Unauthenticated, "incorrect password", err)
+		return nil, status.Errorf(codes.Unauthenticated, "incorrect password")
 	}
 
 	accessToken, accessPayload, err := server.tokenMaker.CreateToken(
