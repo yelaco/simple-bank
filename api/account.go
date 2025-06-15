@@ -8,7 +8,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/lib/pq"
-	_ "github.com/lib/pq"
 	db "github.com/yelaco/simple-bank/db/sqlc"
 	"github.com/yelaco/simple-bank/token"
 )

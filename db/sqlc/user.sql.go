@@ -41,7 +41,7 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 		&i.FullName,
 		&i.Email,
 		&i.PasswordChangedAt,
-		&i.CreateAt,
+		&i.CreatedAt,
 	)
 	return i, err
 }
@@ -60,7 +60,7 @@ func (q *Queries) GetUser(ctx context.Context, username string) (User, error) {
 		&i.FullName,
 		&i.Email,
 		&i.PasswordChangedAt,
-		&i.CreateAt,
+		&i.CreatedAt,
 	)
 	return i, err
 }
