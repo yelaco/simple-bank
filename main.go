@@ -3,6 +3,8 @@ package main
 import (
 	"context"
 	"database/sql"
+	"embed"
+	"io/fs"
 	"log"
 	"net"
 	"net/http"
@@ -19,6 +21,9 @@ import (
 	"github.com/yelaco/simple-bank/gen/pb/v1"
 	"github.com/yelaco/simple-bank/util"
 )
+
+//go:embed doc/swagger/*
+var swaggerFS embed.FS
 
 func main() {
 	config, err := util.LoadConfig(".")
@@ -64,6 +69,13 @@ func runGatewayServer(config util.Config, store db.Store) {
 
 	mux := http.NewServeMux()
 	mux.Handle("/", grpcMux)
+
+	fs, err := fs.Sub(swaggerFS, "doc/swagger")
+	if err != nil {
+		log.Fatal("cannot get subtree from file system")
+	}
+
+	mux.Handle("/swagger/", http.StripPrefix("/swagger/", http.FileServerFS(fs)))
 
 	listener, err := net.Listen("tcp", config.HTTPServerAddress)
 	if err != nil {

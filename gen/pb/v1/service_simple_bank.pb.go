@@ -7,6 +7,7 @@
 package pb
 
 import (
+	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -25,12 +26,16 @@ var File_pb_v1_service_simple_bank_proto protoreflect.FileDescriptor
 
 const file_pb_v1_service_simple_bank_proto_rawDesc = "" +
 	"\n" +
-	"\x1fpb/v1/service_simple_bank.proto\x12\x05pb.v1\x1a\x1cgoogle/api/annotations.proto\x1a\x1bpb/v1/rpc_create_user.proto\x1a\x1apb/v1/rpc_login_user.proto2\xc8\x01\n" +
+	"\x1fpb/v1/service_simple_bank.proto\x12\x05pb.v1\x1a\x1cgoogle/api/annotations.proto\x1a\x1bpb/v1/rpc_create_user.proto\x1a\x1apb/v1/rpc_login_user.proto\x1a.protoc-gen-openapiv2/options/annotations.proto2\xd3\x02\n" +
 	"\n" +
-	"SimpleBank\x12^\n" +
+	"SimpleBank\x12\x97\x01\n" +
 	"\n" +
-	"CreateUser\x12\x18.pb.v1.CreateUserRequest\x1a\x19.pb.v1.CreateUserResponse\"\x1b\x82\xd3\xe4\x93\x02\x15:\x01*\"\x10/v1/users/create\x12Z\n" +
-	"\tLoginUser\x12\x17.pb.v1.LoginUserRequest\x1a\x18.pb.v1.LoginUserResponse\"\x1a\x82\xd3\xe4\x93\x02\x14:\x01*\"\x0f/v1/users/loginB\"Z github.com/yelaco/simple-bank/pbb\x06proto3"
+	"CreateUser\x12\x18.pb.v1.CreateUserRequest\x1a\x19.pb.v1.CreateUserResponse\"T\x92A6\x12\x11Create a new user\x1a!Use this API to create a new user\x82\xd3\xe4\x93\x02\x15:\x01*\"\x10/v1/users/create\x12\xaa\x01\n" +
+	"\tLoginUser\x12\x17.pb.v1.LoginUserRequest\x1a\x18.pb.v1.LoginUserResponse\"j\x92AM\x12\n" +
+	"Login user\x1a?Use this API to login user and get access token & refresh token\x82\xd3\xe4\x93\x02\x14:\x01*\"\x0f/v1/users/loginB\xb2\x01\x92A\x8c\x01\x12\x89\x01\n" +
+	"\x0fSimple Bank API\")\n" +
+	"\fQuang M. Bui\x1a\x19minhquangbui053@gmail.com*F\n" +
+	"\vMIT License\x127https://github.com/yelaco/simple-bank/blob/main/LICENSE2\x031.1Z github.com/yelaco/simple-bank/pbb\x06proto3"
 
 var file_pb_v1_service_simple_bank_proto_goTypes = []any{
 	(*CreateUserRequest)(nil),  // 0: pb.v1.CreateUserRequest

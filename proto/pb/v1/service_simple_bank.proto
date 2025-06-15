@@ -5,8 +5,23 @@ package pb.v1;
 import "google/api/annotations.proto";
 import "pb/v1/rpc_create_user.proto";
 import "pb/v1/rpc_login_user.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
 
 option go_package = "github.com/yelaco/simple-bank/pb";
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {
+    title: "Simple Bank API"
+    version: "1.1"
+    contact: {
+      name: "Quang M. Bui"
+      email: "minhquangbui053@gmail.com"
+    }
+    license: {
+      name: "MIT License"
+      url: "https://github.com/yelaco/simple-bank/blob/main/LICENSE"
+    }
+  }
+};
 
 service SimpleBank {
   rpc CreateUser(CreateUserRequest) returns (CreateUserResponse) {
@@ -14,11 +29,19 @@ service SimpleBank {
       post: "/v1/users/create"
       body: "*"
     };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Use this API to create a new user"
+      summary: "Create a new user"
+    };
   }
   rpc LoginUser(LoginUserRequest) returns (LoginUserResponse) {
     option (google.api.http) = {
       post: "/v1/users/login"
       body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      description: "Use this API to login user and get access token & refresh token"
+      summary: "Login user"
     };
   }
 }
