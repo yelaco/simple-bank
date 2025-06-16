@@ -53,7 +53,7 @@ func ValidateEmail(value string) error {
 
 	_, err := mail.ParseAddress(value)
 	if err != nil {
-		return fmt.Errorf("is not avalid email address")
+		return fmt.Errorf("is not a valid email address")
 	}
 
 	return nil
