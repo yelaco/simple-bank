@@ -15,6 +15,9 @@ import (
 	"google.golang.org/grpc/reflection"
 	"google.golang.org/protobuf/encoding/protojson"
 
+	"github.com/golang-migrate/migrate/v4"
+	_ "github.com/golang-migrate/migrate/v4/database/postgres"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/yelaco/simple-bank/api"
 	db "github.com/yelaco/simple-bank/db/sqlc"
 	"github.com/yelaco/simple-bank/gapi"
@@ -31,6 +34,8 @@ func main() {
 		log.Fatal("cannot load config:", err)
 	}
 
+	runDBMigration(config.MIGRATION_URL, config.DBSource)
+
 	conn, err := sql.Open(config.DBDriver, config.DBSource)
 	if err != nil {
 		log.Fatal("cannot connect to db:", err)
@@ -40,6 +45,19 @@ func main() {
 
 	go runGatewayServer(config, store)
 	runGrpcServer(config, store)
+}
+
+func runDBMigration(migrationURL string, dbSource string) {
+	migration, err := migrate.New(migrationURL, dbSource)
+	if err != nil {
+		log.Fatal("cannot create a new migrate instance:", err)
+	}
+
+	if err := migration.Up(); err != nil && err != migrate.ErrNoChange {
+		log.Fatal("failed to run migrate up:", err)
+	}
+
+	log.Println("db migrated successfully")
 }
 
 func runGatewayServer(config util.Config, store db.Store) {
