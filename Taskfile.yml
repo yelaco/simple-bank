@@ -4,6 +4,11 @@ vars:
   DB_URL: "postgresql://root:secret@localhost:5432/simple_bank?sslmode=disable"
 
 tasks:
+  setup:
+    cmds:
+      - go mod tidy
+      - go install tool
+
   network:
     cmds:
       - docker network inspect bank-network || docker network create bank-network
