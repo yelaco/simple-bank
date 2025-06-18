@@ -72,7 +72,7 @@ func HttpLogger(handler http.Handler) http.Handler {
 			logger = log.Error().Bytes("body", rec.Body)
 		}
 
-		logger.Str("protocol", "grpc").
+		logger.Str("protocol", "http").
 			Str("method", req.Method).
 			Str("path", req.RequestURI).
 			Int("status_code", rec.StatusCode).
