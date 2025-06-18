@@ -12,11 +12,12 @@ const (
 	audience = "user"
 )
 
+// Payload contains the payload data of the token
 type Payload struct {
-	Id        uuid.UUID
-	Username  string
-	IssuedAt  time.Time
-	ExpiredAt time.Time
+	Id        uuid.UUID `json:"id"`
+	Username  string    `json:"username"`
+	IssuedAt  time.Time `json:"issued_at"`
+	ExpiredAt time.Time `json:"expired_at"`
 }
 
 // NewPayload creates a new token payload with a specific username and duration
