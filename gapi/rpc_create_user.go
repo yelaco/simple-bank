@@ -42,7 +42,11 @@ func (server *Server) CreateUser(ctx context.Context, req *pb.CreateUserRequest)
 		return nil, status.Errorf(codes.Internal, "failed to create user: %s", err)
 	}
 
-	return &pb.CreateUserResponse{User: convertUser(user)}, nil
+	rsp := &pb.CreateUserResponse{
+		User: convertUser(user),
+	}
+
+	return rsp, nil
 }
 
 func validateCreateUserRequest(req *pb.CreateUserRequest) (violations []*errdetails.BadRequest_FieldViolation) {
