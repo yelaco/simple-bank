@@ -96,3 +96,7 @@ tasks:
         else
           docker run {{if .detach}}-d{{end}} -p 7101:8080 -e SWAGGER_JSON=/doc/swagger/simple_bank.swagger.json -v {{.pwd}}/doc/swagger:/doc/swagger --name simple-bank-doc swaggerapi/swagger-ui
         fi
+
+  redis:
+    cmds:
+      - docker run --name redis -p 6379:6379 -d redis/redis-stack:7.2.0-v17

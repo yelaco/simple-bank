@@ -9,6 +9,11 @@ import (
 	db "github.com/yelaco/simple-bank/db/sqlc"
 )
 
+const (
+	QueueCritical = "critical"
+	QueueDefault  = "default"
+)
+
 // TaskProcessor defines the interface for processing asynchronous tasks.
 type TaskProcessor interface {
 	// Start initializes the task processor and begins processing tasks.
@@ -25,6 +30,22 @@ type RedisTaskProcessor struct {
 	store  db.Store      // Database store for data operations
 }
 
+// NewRedisTaskProcessor creates a new instance of RedisTaskProcessor
+// with the provided Redis client options and database store.
+func NewRedisTaskProcessor(redisOpt asynq.RedisClientOpt, store db.Store) TaskProcessor {
+	server := asynq.NewServer(redisOpt, asynq.Config{
+		Queues: map[string]int{
+			QueueCritical: 10,
+			QueueDefault:  5,
+		},
+	})
+
+	return &RedisTaskProcessor{
+		server: server,
+		store:  store,
+	}
+}
+
 // Start initializes the Redis task processor and begins listening for tasks.
 // It registers the task handlers and starts the Redis server.
 func (processor *RedisTaskProcessor) Start() error {
@@ -35,15 +56,4 @@ func (processor *RedisTaskProcessor) Start() error {
 	processor.server.Start(mux)
 
 	return nil
-}
-
-// NewRedisTaskProcessor creates a new instance of RedisTaskProcessor
-// with the provided Redis client options and database store.
-func NewRedisTaskProcessor(redisOpt asynq.RedisClientOpt, store db.Store) TaskProcessor {
-	server := asynq.NewServer(redisOpt, asynq.Config{})
-
-	return &RedisTaskProcessor{
-		server: server,
-		store:  store,
-	}
 }
