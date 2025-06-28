@@ -58,8 +58,6 @@ func (server *Server) CreateUser(ctx context.Context, req *pb.CreateUserRequest)
 		return nil, status.Errorf(codes.Internal, "failed to create user: %s", err)
 	}
 
-	// TODO: use db transaction
-
 	rsp := &pb.CreateUserResponse{
 		User: convertUser(txResult.User),
 	}

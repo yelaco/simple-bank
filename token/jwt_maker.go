@@ -40,7 +40,7 @@ func (maker *JwtMaker) CreateToken(username string, duration time.Duration) (str
 }
 
 func (maker *JwtMaker) VerifyToken(token string) (*Payload, error) {
-	keyFunc := func(t *jwt.Token) (interface{}, error) {
+	keyFunc := func(t *jwt.Token) (any, error) {
 		_, ok := t.Method.(*jwt.SigningMethodHMAC)
 		if !ok {
 			return nil, fmt.Errorf("token.JwtMaker.CreateToken: %w", ErrUnexpectedSigningMethod)

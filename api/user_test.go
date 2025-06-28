@@ -33,7 +33,7 @@ func (e eqCreateUserParamsMatcher) String() string {
 	return fmt.Sprintf("matches arg %v and password %v", e.arg, e.password)
 }
 
-func (e eqCreateUserParamsMatcher) Matches(x interface{}) bool {
+func (e eqCreateUserParamsMatcher) Matches(x any) bool {
 	arg, ok := x.(db.CreateUserParams)
 	if !ok {
 		return false
