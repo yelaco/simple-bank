@@ -1,72 +1,76 @@
-Table "accounts" {
-  "id" bigint [pk, not null]
-  "owner" "character varying" [not null]
-  "balance" bigint [not null]
-  "currency" "character varying" [not null]
-  "create_at" timestamp [not null, default: `now()`]
+Project simple_bank {
+  database_type: 'PostgreSQL'
+  Note: '''
+    # Simple Bank Database
+  '''
+}
 
+Table users as U {
+  username varchar [pk]
+  role varchar [not null, default: 'depositor']
+  hashed_password varchar [not null]
+  full_name varchar [not null]
+  email varchar [unique, not null]
+  is_email_verified bool [not null, default: false]
+  password_changed_at timestamptz [not null, default: '0001-01-01']
+  created_at timestamptz [not null, default: `now()`]
+}
+
+Table verify_emails {
+  id bigserial [pk]
+  username varchar [ref: > U.username, not null]
+  email varchar [not null]
+  secret_code varchar [not null]
+  is_used bool [not null, default: false]
+  created_at timestamptz [not null, default: `now()`]
+  expired_at timestamptz [not null, default: `now() + interval '15 minutes'`]
+}
+
+Table accounts as A {
+  id bigserial [pk]
+  owner varchar [ref: > U.username, not null]
+  balance bigint [not null]
+  currency varchar [not null]
+  created_at timestamptz [not null, default: `now()`]
+  
   Indexes {
-    (owner, currency) [unique, name: "owner_currency_key"]
-    owner [type: btree, name: "accounts_owner_idx"]
+    owner
+    (owner, currency) [unique]
   }
 }
 
-Table "entries" {
-  "id" bigint [pk, not null]
-  "account_id" bigint [not null]
-  "amount" bigint [not null, note: 'can be negative or positive']
-  "created_at" timestamp [not null, default: `now()`]
-
+Table entries {
+  id bigserial [pk]
+  account_id bigint [ref: > A.id, not null]
+  amount bigint [not null, note: 'can be negative or positive']
+  created_at timestamptz [not null, default: `now()`]
+  
   Indexes {
-    account_id [type: btree, name: "entries_account_id_idx"]
+    account_id
   }
 }
 
-Table "schema_migrations" {
-  "version" bigint [pk, not null]
-  "dirty" boolean [not null]
-}
-
-Table "sessions" {
-  "id" uuid [pk, not null]
-  "username" "character varying"
-  "refresh_token" "character varying" [not null]
-  "user_agent" "character varying" [not null]
-  "client_ip" "character varying" [not null]
-  "is_blocked" boolean [not null, default: false]
-  "expires_at" timestamp [not null]
-  "create_at" timestamp [not null, default: `now()`]
-}
-
-Table "transfers" {
-  "id" bigint [pk, not null]
-  "from_account_id" bigint [not null]
-  "to_account_id" bigint [not null]
-  "amount" bigint [not null, note: 'must be positive']
-  "created_at" timestamp [not null, default: `now()`]
-
+Table transfers {
+  id bigserial [pk]
+  from_account_id bigint [ref: > A.id, not null]
+  to_account_id bigint [ref: > A.id, not null]
+  amount bigint [not null, note: 'must be positive']
+  created_at timestamptz [not null, default: `now()`]
+  
   Indexes {
-    from_account_id [type: btree, name: "transfers_from_account_id_idx"]
-    (from_account_id, to_account_id) [type: btree, name: "transfers_from_account_id_to_account_id_idx"]
-    to_account_id [type: btree, name: "transfers_to_account_id_idx"]
+    from_account_id
+    to_account_id
+    (from_account_id, to_account_id)
   }
 }
 
-Table "users" {
-  "username" "character varying" [pk, not null]
-  "hashed_password" "character varying" [not null]
-  "full_name" "character varying" [not null]
-  "email" "character varying" [unique, not null]
-  "password_changed_at" timestamp [not null, default: `'0001-01-01 00:00:00+00'::timestampwithtimezone`]
-  "create_at" timestamp [not null, default: `now()`]
+Table sessions {
+  id uuid [pk]
+  username varchar [ref: > U.username, not null]
+  refresh_token varchar [not null]
+  user_agent varchar [not null]
+  client_ip varchar [not null]
+  is_blocked boolean [not null, default: false]
+  expires_at timestamptz [not null]
+  created_at timestamptz [not null, default: `now()`]
 }
-
-Ref "accounts_owner_fkey":"users"."username" < "accounts"."owner"
-
-Ref "entries_account_id_fkey":"accounts"."id" < "entries"."account_id"
-
-Ref "sessions_username_fkey":"users"."username" < "sessions"."username"
-
-Ref "transfers_from_account_id_fkey":"accounts"."id" < "transfers"."from_account_id"
-
-Ref "transfers_to_account_id_fkey":"accounts"."id" < "transfers"."to_account_id"

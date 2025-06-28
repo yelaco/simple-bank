@@ -9,6 +9,7 @@ import (
 	"github.com/redis/go-redis/v9"
 	"github.com/rs/zerolog/log"
 	db "github.com/yelaco/simple-bank/db/sqlc"
+	"github.com/yelaco/simple-bank/mail"
 )
 
 const (
@@ -30,11 +31,12 @@ type TaskProcessor interface {
 type RedisTaskProcessor struct {
 	server *asynq.Server // Redis server instance for task processing
 	store  db.Store      // Database store for data operations
+	mailer mail.EmailSender
 }
 
 // NewRedisTaskProcessor creates a new instance of RedisTaskProcessor
 // with the provided Redis client options and database store.
-func NewRedisTaskProcessor(redisOpt asynq.RedisClientOpt, store db.Store) TaskProcessor {
+func NewRedisTaskProcessor(redisOpt asynq.RedisClientOpt, store db.Store, mailer mail.EmailSender) TaskProcessor {
 	logger := NewLogger()
 	redis.SetLogger(logger)
 
@@ -53,6 +55,7 @@ func NewRedisTaskProcessor(redisOpt asynq.RedisClientOpt, store db.Store) TaskPr
 	return &RedisTaskProcessor{
 		server: server,
 		store:  store,
+		mailer: mailer,
 	}
 }
 
