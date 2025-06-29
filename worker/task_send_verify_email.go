@@ -6,7 +6,6 @@ import (
 	"fmt"
 
 	"github.com/hibiken/asynq"
-	"github.com/jordan-wright/email"
 	"github.com/rs/zerolog/log"
 	db "github.com/yelaco/simple-bank/db/sqlc"
 	"github.com/yelaco/simple-bank/util"
