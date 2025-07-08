@@ -95,6 +95,7 @@ tasks:
   mock:
     cmds:
       - go tool -modfile=go.tool.mod mockgen -package mockdb -destination db/mock/store.go github.com/yelaco/simple-bank/db/sqlc Store
+      - go tool -modfile=go.tool.mod mockgen -package mockwk -destination worker/mock/distributor.go github.com/yelaco/simple-bank/worker TaskDistributor
 
   doc-api:
     desc: View api documentation in Swagger UI
