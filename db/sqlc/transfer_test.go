@@ -9,8 +9,10 @@ import (
 	"github.com/yelaco/simple-bank/util"
 )
 
-var fromAccountID int64 = -1
-var toAccountID int64 = -1
+var (
+	fromAccountID int64 = -1
+	toAccountID   int64 = -1
+)
 
 func createRandomTransfer(t *testing.T) Transfer {
 	if fromAccountID < 0 {
@@ -26,7 +28,7 @@ func createRandomTransfer(t *testing.T) Transfer {
 		Amount:        util.RandomMoney(),
 	}
 
-	transfer, err := testQueries.CreateTransfer(context.Background(), arg)
+	transfer, err := testStore.CreateTransfer(context.Background(), arg)
 	require.NoError(t, err)
 	require.NotEmpty(t, transfer)
 
@@ -47,7 +49,7 @@ func TestCreateTransfer(t *testing.T) {
 func TestGetTransfer(t *testing.T) {
 	transfer1 := createRandomTransfer(t)
 
-	transfer2, err := testQueries.GetTransfer(context.Background(), transfer1.ID)
+	transfer2, err := testStore.GetTransfer(context.Background(), transfer1.ID)
 	require.NoError(t, err)
 	require.NotEmpty(t, transfer2)
 
@@ -70,7 +72,7 @@ func TestListTransfers(t *testing.T) {
 		Offset:        5,
 	}
 
-	transfers, err := testQueries.ListTransfers(context.Background(), arg)
+	transfers, err := testStore.ListTransfers(context.Background(), arg)
 	require.NoError(t, err)
 	require.Len(t, transfers, 5)
 
