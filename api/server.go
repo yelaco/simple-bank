@@ -1,3 +1,6 @@
+// Package api provides the HTTP server implementation for serving
+// requests related to banking services, including user authentication,
+// account management, and transaction processing.
 package api
 
 import (

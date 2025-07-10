@@ -8,7 +8,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-	"github.com/lib/pq"
 	db "github.com/yelaco/simple-bank/db/sqlc"
 	"github.com/yelaco/simple-bank/util"
 )
@@ -64,14 +63,11 @@ func (server *Server) createUser(ctx *gin.Context) {
 
 	user, err := server.store.CreateUser(ctx, arg)
 	if err != nil {
-		if pqErr, ok := err.(*pq.Error); ok {
-			switch pqErr.Code.Name() {
-			case "unique_violation":
-				ctx.JSON(http.StatusForbidden, errorResponse(
-					fmt.Errorf("api.Server.createUser: %w", err),
-				))
-				return
-			}
+		if db.ErrorCode(err) == db.UniqueViolation {
+			ctx.JSON(http.StatusForbidden, errorResponse(
+				fmt.Errorf("api.Server.createUser: %w", err),
+			))
+			return
 		}
 		ctx.JSON(http.StatusInternalServerError, errorResponse(
 			fmt.Errorf("api.Server.createUser: %w", err),
