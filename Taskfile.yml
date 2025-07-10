@@ -5,9 +5,20 @@ vars:
 
 tasks:
   setup:
+    desc: Setup the project
     cmds:
       - go mod tidy
-      - go install tool
+      - go mod tidy -modfile=go.tool.mod
+
+  upgrade:
+    desc: Upgrade dependencies or tools (use `task upgrade -- tool`)
+    cmds:
+      - |
+        if [ "{{.CLI_ARGS}}" = "tool" ]; then
+          go get -modfile=go.tool.mod tool
+        else
+          go tool -modfile=go.tool.mod go-mod-upgrade
+        fi
 
   network:
     cmds:
@@ -27,19 +38,25 @@ tasks:
 
   migrateup:
     cmds:
-      - migrate -path db/migration/ -database "{{.DB_URL}}" --verbose up
+      - go run -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest -path db/migration/ -database "{{.DB_URL}}" --verbose up
 
   migrateup1:
     cmds:
-      - migrate -path db/migration/ -database "{{.DB_URL}}" --verbose up 1
+      - go run -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest -path db/migration/ -database "{{.DB_URL}}" --verbose up 1
 
   migratedown:
     cmds:
-      - migrate -path db/migration/ -database "{{.DB_URL}}" --verbose down
+      - go run -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest -path db/migration/ -database "{{.DB_URL}}" --verbose down
 
   migratedown1:
     cmds:
-      - migrate -path db/migration/ -database "{{.DB_URL}}" --verbose down 1
+      - go run -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest -path db/migration/ -database "{{.DB_URL}}" --verbose down 1
+
+  new_migration:*:
+    vars:
+      NAME: "{{index .MATCH 0}}"
+    cmds:
+      - go run -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latestcreate -ext sql -dir db/migration -seq {{.NAME}}
 
   db_docs:
     cmds:
@@ -51,11 +68,11 @@ tasks:
 
   sqlc:
     cmds:
-      - sqlc generate
+      - go tool -modfile=go.tool.mod sqlc generate
 
   test:
     cmds:
-      - go test -v -cover ./...
+      - go test -v -cover -short ./...
 
   server:
     cmds:
@@ -77,7 +94,8 @@ tasks:
 
   mock:
     cmds:
-      - mockgen -package mockdb -destination db/mock/store.go github.com/yelaco/simple-bank/db/sqlc Store
+      - go tool -modfile=go.tool.mod mockgen -package mockdb -destination db/mock/store.go github.com/yelaco/simple-bank/db/sqlc Store
+      - go tool -modfile=go.tool.mod mockgen -package mockwk -destination worker/mock/distributor.go github.com/yelaco/simple-bank/worker TaskDistributor
 
   doc-api:
     desc: View api documentation in Swagger UI
@@ -96,3 +114,7 @@ tasks:
         else
           docker run {{if .detach}}-d{{end}} -p 7101:8080 -e SWAGGER_JSON=/doc/swagger/simple_bank.swagger.json -v {{.pwd}}/doc/swagger:/doc/swagger --name simple-bank-doc swaggerapi/swagger-ui
         fi
+
+  redis:
+    cmds:
+      - docker run --name redis -p 6379:6379 -d redis/redis-stack:7.2.0-v17
