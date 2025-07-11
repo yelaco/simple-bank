@@ -57,7 +57,7 @@ func (rec *ResponseRecorder) Write(body []byte) (int, error) {
 	return rec.ResponseWriter.Write(body)
 }
 
-func HttpLogger(handler http.Handler) http.Handler {
+func HTTPLogger(handler http.Handler) http.Handler {
 	return http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 		startTime := time.Now()
 		rec := &ResponseRecorder{

@@ -36,6 +36,12 @@ tasks:
     cmds:
       - docker exec -it postgres12 dropdb simple_bank
 
+  migrateforce:*:
+    vars:
+      VERSION: "{{index .MATCH 0}}"
+    cmds:
+      - go run -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest -path db/migration/ -database "postgresql://root:secret@localhost:5432/simple_bank?sslmode=disable" force {{.VERSION}}
+
   migrateup:
     cmds:
       - go run -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest -path db/migration/ -database "{{.DB_URL}}" --verbose up
@@ -56,7 +62,7 @@ tasks:
     vars:
       NAME: "{{index .MATCH 0}}"
     cmds:
-      - go run -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latestcreate -ext sql -dir db/migration -seq {{.NAME}}
+      - go run -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest create -ext sql -dir db/migration -seq {{.NAME}}
 
   db_docs:
     cmds:

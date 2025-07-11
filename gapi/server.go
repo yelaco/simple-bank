@@ -1,3 +1,4 @@
+// Package gapi contains the gRPC API implementation. It includes server setup and request handlers for user authentication, account management, and transactional operations.
 package gapi
 
 import (

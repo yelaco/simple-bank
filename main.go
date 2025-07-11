@@ -43,7 +43,7 @@ func main() {
 		log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
 	}
 
-	runDBMigration(config.MigrationUrl, config.DBSource)
+	runDBMigration(config.MigrationURL, config.DBSource)
 
 	conn, err := pgxpool.New(context.Background(), config.DBSource)
 	if err != nil {
@@ -127,7 +127,7 @@ func runGatewayServer(config util.Config, store db.Store, taskDistributor worker
 	}
 
 	log.Info().Msgf("start HTTP gateway server at %s", listener.Addr().String())
-	handler := gapi.HttpLogger(mux)
+	handler := gapi.HTTPLogger(mux)
 	err = http.Serve(listener, handler)
 	if err != nil {
 		log.Fatal().Err(err).Msg("cannot start gRPC server")

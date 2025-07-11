@@ -1,3 +1,4 @@
+// Package util provides utility functions used throughout the project
 package util
 
 import (
@@ -25,7 +26,7 @@ func RandomString(n int) string {
 	var sb strings.Builder
 	k := len(alphabet)
 
-	for i := 0; i < n; i++ {
+	for range n {
 		c := alphabet[randGen.Intn(k)]
 		sb.WriteByte(c)
 	}
