@@ -11,6 +11,7 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/go-chi/cors"
 	"github.com/hibiken/asynq"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rs/zerolog"
@@ -160,8 +161,24 @@ func runGatewayServer(
 
 	mux.Handle("/swagger/", http.StripPrefix("/swagger/", http.FileServerFS(fs)))
 
+	c := cors.New(cors.Options{
+		AllowedOrigins: config.AllowedOrigins,
+		AllowedMethods: []string{
+			http.MethodGet,
+			http.MethodPost,
+			http.MethodPatch,
+		},
+		AllowedHeaders: []string{
+			"Authorization",
+			"Content-Type",
+		},
+		AllowCredentials: false,
+		MaxAge:           300,
+	})
+	handler := c.Handler(gapi.HTTPLogger(mux))
+
 	httpServer := &http.Server{
-		Handler: gapi.HTTPLogger(mux),
+		Handler: handler,
 		Addr:    config.HTTPServerAddress,
 	}
 
