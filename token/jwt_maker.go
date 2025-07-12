@@ -28,6 +28,7 @@ func (maker *JwtMaker) CreateToken(username string, role string, duration time.D
 	if err != nil {
 		return "", nil, err
 	}
+
 	jwtToken := jwt.NewWithClaims(
 		jwt.SigningMethodHS256,
 		payload,

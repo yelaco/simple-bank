@@ -50,7 +50,9 @@ func (p *Payload) GetIssuedAt() (*jwt.NumericDate, error) {
 }
 
 func (p *Payload) GetNotBefore() (*jwt.NumericDate, error) {
-	return nil, nil
+	return &jwt.NumericDate{
+		Time: p.IssuedAt,
+	}, nil
 }
 
 func (p *Payload) GetIssuer() (string, error) {
