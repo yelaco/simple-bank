@@ -22,6 +22,8 @@ type TaskProcessor interface {
 	// Start initializes the task processor and begins processing tasks.
 	Start() error
 
+	Shutdown()
+
 	// ProcessTaskSendVerifyEmail processes the "send verify email" task.
 	ProcessTaskSendVerifyEmail(ctx context.Context, task *asynq.Task) error
 }
@@ -69,4 +71,8 @@ func (processor *RedisTaskProcessor) Start() error {
 	processor.server.Start(mux)
 
 	return nil
+}
+
+func (processor *RedisTaskProcessor) Shutdown() {
+	processor.server.Shutdown()
 }
